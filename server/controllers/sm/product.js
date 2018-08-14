@@ -1,8 +1,8 @@
-/**
- * users 控制器
- *
- * Created by jerry on 2017/11/2.
- */
+const productDBModel = require('../../lib/db.product')
+const errorcode = require('../../lib/error.class');
+let userController = {};
+
+/*
 const Mock = require('mockjs');
 const errorcode = require('../models/error.class.js');
 const productDBModel = require('../models/db.product');
@@ -12,36 +12,25 @@ let productController = {};
 var multiparty = require('multiparty');
 var fs = require("fs");
 var request = require('request');
-//let _Users = Users;
-
-productController.testminip = function(req,res){
-	request('https://mlxzohtt.qcloud.la/weapp/helloworld', function (error, response, body) {
-		console.log(error)
-	  if (!error && response.statusCode == 200) {
-	    console.log(body) // 打印google首页
-	    	res.json(body);
-	  }
-	})
-}
+*/
 
 /**
  * 通过查询，获取列表
  * @param req
  * @param res
  */
-productController.find = function (req, res) {
-	let page = parseInt(req.query.page || 1); //页码（默认第1页）
-	let limit = parseInt(req.query.limit || 10); //每页显示条数（默认10条）
-	let title = req.query.title || '';
+productController.find = async (ctx)=> {
+  let query = ctx.request.query;
+	let page = parseInt(query.page || 1); //页码（默认第1页）
+	let limit = parseInt(query.limit || 10); //每页显示条数（默认10条）
+	let title = query.title || '';
 	let offset = (page-1) * limit;
 	let filters = new Array();
-	//filters.push({"field":"type","value":'0'});
 	if(title != "") filters.push({"field":"`title`","value":title,"type":"likes"});
 	var sorts = new Array();
 	
 	productDBModel.find(offset,limit,filters,sorts,function(result){
-		global.logger.info(result);
-		res.json(result);
+    ctx.response.body = result;
 	});
 };
 
@@ -51,21 +40,21 @@ productController.find = function (req, res) {
  * @param req
  * @param res
  */
-productController.add = function (req, res) {
+productController.add = async (ctx) => {
+  let body = ctx.request.body;
   let product = {
-  	title:req.body.title,
-  	summary:req.body.summary,
-  	imagename:req.body.imagename,
-  	imagepath:req.body.imagepath,
-	price:req.body.price,
-	type:1,
-	sold:0,
-  	description:req.body.description,
-  	remark:req.body.remark
+  	title:body.title,
+  	summary:body.summary,
+  	imagename:body.imagename,
+  	imagepath:body.imagepath,
+    price:body.price,
+    type:1,
+    sold:0,
+  	description:body.description,
+  	remark:body.remark
   }
   productDBModel.add(product,function(result){
-  	global.logger.info(result);
-  	res.json({"code":result.code })
+    ctx.response.body = {"code":result.code };
   });
 };
 
@@ -74,57 +63,56 @@ productController.add = function (req, res) {
  * @param req
  * @param res
  */
-productController.set = function (req, res) {
-	
-	global.logger.info(req.body);
+productController.set = async (ctx) => {
+  let body = ctx.request.body;
 	let product = [];
-	if(req.body.index && req.body.index > 0){
-		product["index"] = req.body.index;
+	if(body.index && body.index > 0){
+		product["index"] = body.index;
 	}else{
 	  	res.json({"code":errorcode.PARAMS_FAILED});
 	}
   
-	if(req.body.title && req.body.title !=""){
-		product["title"] = req.body.title;
+	if(body.title && body.title !=""){
+		product["title"] = body.title;
 	}
 	
-	if(req.body.summary && req.body.summary !=""){
-		product["summary"] = req.body.summary;
+	if(body.summary && body.summary !=""){
+		product["summary"] = body.summary;
 	}
 	
-	if(req.body.imagename && req.body.imagename !=""){
-		product["imagename"] = req.body.imagename;
+	if(body.imagename && body.imagename !=""){
+		product["imagename"] = body.imagename;
 	}
 	
-	if(req.body.imagepath && req.body.imagepath !=""){
-		product["imagepath"] = req.body.imagepath;
+	if(body.imagepath && body.imagepath !=""){
+		product["imagepath"] = body.imagepath;
 	}
 	
-	if(req.body.price && req.body.price !=""){
-		product["price"] = req.body.price;
+	if(body.price && body.price !=""){
+		product["price"] = body.price;
 	}
 	
-	if(req.body.description && req.body.description !=""){
-		product["description"] = req.body.description;
+	if(body.description && body.description !=""){
+		product["description"] = body.description;
 	}
 	
-	if(req.body.remark && req.body.remark !=""){
-		product["remark"] = req.body.remark;
+	if(body.remark && body.remark !=""){
+		product["remark"] = body.remark;
 	}
-	if(req.body.purchasenotes && req.body.purchasenotes !=""){
-		product["purchasenotes"] = req.body.purchasenotes;
+	if(body.purchasenotes && body.purchasenotes !=""){
+		product["purchasenotes"] = body.purchasenotes;
 	}
-	if(req.body.regulations && req.body.regulations !=""){
-		product["regulations"] = req.body.regulations;
+	if(body.regulations && body.regulations !=""){
+		product["regulations"] = body.regulations;
 	}
-	productDBModel.set(product,function(result){
-	  	global.logger.info(result);
-	  	res.json({"code":result.code })
+	productDBModel.set(product,function(result){   
+    ctx.response.body = { "code": result.code };
 	});
 };
 
 
-productController.upload = function (req, res) {
+productController.upload = async (ctx) => {
+  /*
 	var form = new multiparty.Form({uploadDir: global.conf.uploadImageTargetDir});//'./server/uploadfile/'
 	form.parse(req, function(err, fields, files) {
 		let f = files.file[0];
@@ -132,6 +120,7 @@ productController.upload = function (req, res) {
       	let rv = fs.renameSync(f.path,npath);
   		res.json({"code":err,"path":npath,name: f.originalFilename});
 	});
+  */
   	//global.logger.info(req);
 };
 
@@ -140,17 +129,14 @@ productController.upload = function (req, res) {
  * @param req
  * @param res
  */
-productController.removeBatch = function (req, res) {
-	let indexs = req.params.indexs;
-	global.logger.info(req.body.indexs);
-	global.logger.info(req.params);
-	global.logger.info(indexs);
-	if (!indexs) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
+productController.removeBatch = async (ctx) => {
+  let indexs = ctx.params.indexs;	
+  if (!indexs) {
+    ctx.response.body = { "code": errorcode.PARAMS_FAILED };
+    return;
 	}
-	productDBModel.remove(indexs,function(result){
-		global.logger.info(result);
-		res.json(result);
+	productDBModel.remove(indexs,function(result){	
+    ctx.response.body = { "code": result.code };
 	});
 };
 
@@ -159,16 +145,14 @@ productController.removeBatch = function (req, res) {
  * @param req
  * @param res
  */
-productController.remove = function (req, res) {
-	let index = _.trim(req.body.index || '');
-	global.logger.info(index);
-	if (!index) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
-	}
-	
-	productDBModel.remove(index,function(result){
-		global.logger.info(result);
-		res.json(result)
+productController.remove = async (ctx) =>  {
+  let index = ctx.body.index;	
+  if (!index) {
+    ctx.response.body = { "code": errorcode.PARAMS_FAILED };
+    return;
+	}	
+	productDBModel.remove(index,function(result){		
+    ctx.response.body = { "code": result.code };
 	});
 };
 
@@ -179,7 +163,7 @@ productController.remove = function (req, res) {
  * @param req
  * @param res
  */
-productController.findBuyLimit = function (req, res) {
+productController.findBuyLimit = async (ctx) =>  {
 	let page = parseInt(req.query.page || 1); //页码（默认第1页）
 	let limit = parseInt(req.query.limit || 10); //每页显示条数（默认10条）
 	let title = req.query.title || '';
@@ -200,7 +184,7 @@ productController.findBuyLimit = function (req, res) {
  * @param req
  * @param res
  */
-productController.addBuyLimit = function (req, res) {
+productController.addBuyLimit = async (ctx) =>  {
 	
 	global.logger.info(req.body);
 	let product = [];
@@ -233,7 +217,7 @@ productController.addBuyLimit = function (req, res) {
 	});
 }
 
-productController.setBuyLimit = function (req, res) {
+productController.setBuyLimit = async (ctx) =>  {
 	
 	global.logger.info(req.body);
 	let product = [];
@@ -271,7 +255,7 @@ productController.setBuyLimit = function (req, res) {
  * @param req
  * @param res
  */
-productController.removeBuyLimitBatch = function (req, res) {
+productController.removeBuyLimitBatch = async (ctx) =>  {
 	let indexs = req.params.indexs;
 	global.logger.info(req.body.indexs);
 	global.logger.info(req.params);
@@ -285,7 +269,7 @@ productController.removeBuyLimitBatch = function (req, res) {
 	});
 };
 
-productController.trashBuyLimitBatch = function (req, res) {
+productController.trashBuyLimitBatch = async (ctx) =>  {
 	let indexs = req.params.indexs;
 	global.logger.info(req.body.indexs);
 	global.logger.info(req.params);
@@ -305,7 +289,7 @@ productController.trashBuyLimitBatch = function (req, res) {
  * @param req
  * @param res
  */
-productController.findGroupPurchase = function (req, res) {
+productController.findGroupPurchase = async (ctx) =>  {
 	let page = parseInt(req.query.page || 1); //页码（默认第1页）
 	let limit = parseInt(req.query.limit || 10); //每页显示条数（默认10条）
 	let title = req.query.title || '';
@@ -326,7 +310,7 @@ productController.findGroupPurchase = function (req, res) {
  * @param req
  * @param res
  */
-productController.addGroupPurchase = function (req, res) {
+productController.addGroupPurchase = async (ctx) =>  {
 	
 	global.logger.info("add group purchase");
 	global.logger.info(req.body);
@@ -362,7 +346,7 @@ productController.addGroupPurchase = function (req, res) {
 	});
 }
 
-productController.setGroupPurchase = function (req, res) {
+productController.setGroupPurchase = async (ctx) =>  {
 	
 	global.logger.info(req.body);
 	let product = [];
@@ -400,7 +384,7 @@ productController.setGroupPurchase = function (req, res) {
  * @param req
  * @param res
  */
-productController.removeGroupPurchaseBatch = function (req, res) {
+productController.removeGroupPurchaseBatch = async (ctx) =>  {
 	let indexs = req.params.indexs;
 	global.logger.info(req.body.indexs);
 	global.logger.info(req.params);
@@ -413,7 +397,7 @@ productController.removeGroupPurchaseBatch = function (req, res) {
 		res.json(result);
 	});
 };
-productController.trashGroupPurchaseBatch = function (req, res) {
+productController.trashGroupPurchaseBatch = async (ctx) =>  {
 	let indexs = req.params.indexs;
 	global.logger.info(req.body.indexs);
 	global.logger.info(req.params);
