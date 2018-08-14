@@ -1,0 +1,1 @@
+const Login = { template: '<div>Login</div>' };
