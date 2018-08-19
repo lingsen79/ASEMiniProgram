@@ -283,7 +283,6 @@ productDBModel.trashGroupPurchase = async (indexs) => {
   }
 }
 
-
 productDBModel.removeGroupPurchase = async (indexs) => {
   var result = {
     code: errorcode.DEL_FAILED
@@ -301,4 +300,5 @@ productDBModel.removeGroupPurchase = async (indexs) => {
     return result;
   }
 }
+
 module.exports = productDBModel;

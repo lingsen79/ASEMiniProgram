@@ -1,4 +1,4 @@
-const userDBModel = require('../../lib/db.user')
+const userDBModel = require('../../lib/db.user.class')
 const errorcode = require('../../lib/error.class');
 let userController = {};
 
@@ -37,6 +37,7 @@ userController.resetpwd = async (ctx) => {
  */
 userController.find = async (ctx) => {
   let query = ctx.request.query;
+  console.log(query)
 	let page = parseInt(query.page || 1); //页码（默认第1页）
 	let limit = parseInt(query.limit || 10); //每页显示条数（默认10条）
 	let name = query.name || '';

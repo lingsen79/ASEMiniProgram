@@ -1,6 +1,6 @@
-const productDBModel = require('../../lib/db.product')
+const productDBModel = require('../../lib/db.product.class')
 const errorcode = require('../../lib/error.class');
-let userController = {};
+let productController = {};
 
 /*
 const Mock = require('mockjs');

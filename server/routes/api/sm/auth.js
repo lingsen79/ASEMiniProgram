@@ -6,6 +6,7 @@ const path = require('path');
 const smControllers = require('../../../controllers/sm')
 
 router.post('/', smControllers.auth.login);
+router.all('/logout', smControllers.auth.logout);
 
 router.get('/checkStatus', smControllers.auth.checkStatus);
 

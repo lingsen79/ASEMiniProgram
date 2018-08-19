@@ -29,9 +29,9 @@ const CONF = {
         host: 'localhost',
         port: 3306,
         user: 'root',
-        db: 'cAuth',
+        //db: 'cAuth',
         minidb:'asemini',
-        //db:'asemini',
+        db:'asemini',
         //pass: 'wxdf90488513e663d2',
         pass: 'root',
         char: 'utf8mb4'

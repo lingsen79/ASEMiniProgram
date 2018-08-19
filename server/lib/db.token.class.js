@@ -33,7 +33,11 @@ tokenDBModel.create = async (user) => {
   
 }
 
+tokenDBModel.remove = async (token) => {
+  await global.asemini_conn('token').where('token', token).del();
+}
+
 tokenDBModel.clear = async() =>{
-  global.asemini_conn('token').where('expiretime', '<', 'date_sub(now(), INTERVAL 2 DAY)').del();
+  await global.asemini_conn.raw('delete from `token` where `expiretime`<date_sub(now(), INTERVAL 2 DAY)');
 }
 module.exports = tokenDBModel;
