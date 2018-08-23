@@ -54,6 +54,8 @@ authController.checkStatus = async (ctx,next) => {
   try {
     let body = ctx.request.body;
     let query = ctx.request.query;
+    console.log(body);
+    console.log(query)
     if ((body && body.token) || (query && query.token)) {
       //next();
       await next();

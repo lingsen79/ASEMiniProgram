@@ -1,5 +1,6 @@
 const userDBModel = require('../../lib/db.user.class')
 const errorcode = require('../../lib/error.class');
+const uti = require('../../lib/utility.class');
 let userController = {};
 
 /**
@@ -16,13 +17,13 @@ userController.resetpwd = async (ctx) => {
 	
 	let user = [];
 	if(body.index && body.index > 0){
-		user["index"] = req.body.index;
+		user["index"] = body.index;
 	}else{
     return ctx.response.body = { "code": errorcode.PARAMS_FAILED };
 	}
 	
 	if(body.password && body.password != ""){
-		user["password"] = uti.md5Encode(req.body.password);
+		user["password"] = uti.md5Encode(body.password);
   } else {
     return ctx.response.body = { "code": errorcode.PARAMS_FAILED };
 	}
@@ -90,11 +91,11 @@ userController.add = async (ctx) => {
   let user = {
   	mobile:body.mobile,
   	name:body.name,
-  	password:body.password,
+  	password:uti.md5Encode(body.password),
   	sex:body.sex,
   	age:body.age,
   	birth:(body.birth ? body.birth : null),
-  	addr:body.addr,
+  	address:body.addr,
   	remark:body.remark,
   	type:0,
   	password:body.password,
@@ -150,8 +151,9 @@ userController.set = async (ctx) =>{
  * @param res
  */
 userController.removeBatch = async (ctx) => {
-  let body = ctx.request.body;
-  let indexs = body.indexs;
+  let params = ctx.params;
+  let indexs = params.indexs;
+  console.log(indexs)
   if (!indexs) {
     ctx.response.body = { "code": errorcode.PARAMS_FAILED, "errmsg": "不合法的参数", body: body };
     return;
@@ -167,8 +169,8 @@ userController.removeBatch = async (ctx) => {
  * @param res
  */
 userController.remove = async (ctx) => {
-  let body = ctx.request.body;
-  let index = body.index;
+  let params = ctx.params;
+  let index = params.index;
   if (!index) {
     ctx.response.body = { "code": errorcode.PARAMS_FAILED, "errmsg": "不合法的参数", body: body };
     return;

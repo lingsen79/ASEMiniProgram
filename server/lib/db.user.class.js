@@ -12,7 +12,7 @@ let userDBModel = {};
  */
 userDBModel.find = async (offset, limit, filters, sorts) => {
     let wheres = uti.formatSqlWhereDefine(filters,sorts);
-    let result  = await global.asemini_conn.raw("select `index`, `name`, `password`, `mobile`, `sex`, `age`, `birth`, `address`, `remark`, `modifytime`, `creattime`, `type`, `totalpoint` from user " + wheres[0] + wheres[1] + " limit " + offset + "," + limit);
+    let result  = await global.asemini_conn.raw("select `index`, `name`, `password`, `mobile`, `sex`, `age`, `birth`, `address`, `remark`, `modifytime`, `createtime`, `type`, `totalpoint` from user " + wheres[0] + wheres[1] + " limit " + offset + "," + limit);
     let rows = result[0];
 
     result = await global.asemini_conn.raw("select count(1) count from user " + wheres[0]);
@@ -47,6 +47,7 @@ userDBModel.add = async (user) =>{
       result.code = errorcode.SUCCESS;
     } catch (e) {
       result.code = errorcode.FAILED;
+      console.log(e)
     } finally {
       return result;
     }
@@ -65,15 +66,15 @@ userDBModel.set = async (user) => {
     }
     try {
 
-      var columns = new Array();
+      var columns = {};
       for (var key in user) {
         if (key != "index" && key != "modifytime" && key != "createtime") {
-          columns.set(key, user[key]);
+          columns[key] = user[key];
         }
       }
 
-      if(columns.length > 0){
-        columns.set("modifytime",new Date());
+      if(Object.keys(columns).length > 0){
+        columns["modifytime"] = new Date();
       }
 
       //sql = "update user set " + columns.join(",") + ",modifytime=now() where `index`=? ";
