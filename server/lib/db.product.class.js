@@ -45,7 +45,8 @@ productDBModel.add = async (product) =>{
     result.index = row[0];
     result.code = errorcode.SUCCESS;
   } catch (e) {
-    result.code = errorcode.FAILED;
+    result.code = e;
+    result.debug = e;
   } finally {
     return result;
   }

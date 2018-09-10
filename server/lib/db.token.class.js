@@ -12,7 +12,7 @@ let tokenDBModel = {};
  */
 tokenDBModel.find = async (filters, sorts) => {
   let wheres = uti.formatSqlWhereDefine(filters, sorts);
-  let result = await global.asemini_conn.raw("select `index`, `token`, `user_index`, `expiretime` from token t,user u " + wheres[0] + wheres[1]);
+  let result = await global.asemini_conn.raw("select t.`index`, t.`token`, t.`user_index`, t.`expiretime`,u.password from token t inner join user u on u.`index`=t.user_index " + wheres[0] + wheres[1]);
   let rows = result[0];
 
   result = {

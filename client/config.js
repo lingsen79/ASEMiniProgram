@@ -12,8 +12,14 @@ var config = {
     service: {
         host,
 
+        // 测试的请求地址，用于测试会话
+        requestUrl: `${host}/weapp/`,
+
         // 登录地址，用于建立会话
         loginUrl: `${host}/weapp/login`,
+
+        // 测试的请求地址，用于测试会话
+        requestClientUrl: `${host}/weapp/client`,
 
         // 测试的请求地址，用于测试会话
         requestUrl: `${host}/weapp/user`,

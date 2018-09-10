@@ -1,0 +1,48 @@
+<!--main.wxml-->
+<view class="page">
+    <view class="page__bd page__bd_spacing">
+      <ul>
+        <li  wx:for="{{productList}}" wx:key="{{item}}" data-item="{{item}}" >
+          <view class="center" class="box_p">
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="placeholder"><image src='{{item.imagepath}}'></image></div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item" >
+                <div class="box_p_title">{{item.title}}</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_summary">{{item.summary}}</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_price">¥{{item.price}}</div>
+              </div>
+              <div class="weui-flex__item">
+                <div class="box_p_buy_btn">去购买</div>
+              </div>
+              <div class="weui-flex__item">
+                <div class="box_p_text_r">已售{{item.sold}}份</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_oprice">市场价:¥{{item.price}}</div>
+              </div>
+            </div>
+          </view>
+        </li>
+      </ul>
+      
+    </view>
+    <view class="page__bd page__bd_spacing">
+        <view class="weui-footer">
+            <view class="weui-footer__text">Copyright © 2008-2016 weui.io</view>
+        </view>
+    </view>
+</view>

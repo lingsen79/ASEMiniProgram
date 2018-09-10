@@ -56,7 +56,18 @@ authController.checkStatus = async (ctx,next) => {
     let query = ctx.request.query;
     console.log(body);
     console.log(query)
-    if ((body && body.token) || (query && query.token)) {
+    let token ="";
+    if (body && body.token) {
+      token = body.token;
+    }else if(query && query.token){
+      token = query.token;
+    }
+
+    if (token != "") {
+      let filters = [{ "field": "token", "value": token }];
+      let result = await tokenDB.find(filters,[]);
+      let user = result.rows[0];
+      ctx.state.sm = {index:user.user_index,password:user.password};
       //next();
       await next();
     } else {

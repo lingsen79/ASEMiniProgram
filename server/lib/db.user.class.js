@@ -61,8 +61,7 @@ userDBModel.add = async (user) =>{
 userDBModel.set = async (user) => {
   
     var result = {
-      code: errorcode.SET_FAILED,
-      userIndex: 0
+      code: errorcode.SET_FAILED
     }
     try {
 

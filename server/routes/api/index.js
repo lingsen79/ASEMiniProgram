@@ -39,10 +39,10 @@ module.exports = router;
 //   ctx.state.data = 'this a index response!';
 // });
 
-router.get('/', function (ctx) {
-  //ctx.body = 'this a index response!';
-  ctx.state.data = 'this a index response!';
-});
+// router.get('/', function (ctx) {
+//   //ctx.body = 'this a index response!';
+//   ctx.state.data = 'this a index response!';
+// });
 
 
 //module.exports = router;

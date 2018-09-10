@@ -9,15 +9,15 @@ const CONF = {
     appSecret: '',
 
     // 是否使用腾讯云代理登录小程序
-    useQcloudLogin: false,// false 就不需要secret的认证
+    useQcloudLogin: true,// false 就不需要secret的认证
 
-    serverHost: 'localhost',
-    tunnelServerUrl: '',
-    tunnelSignatureKey: '27fb7d1c161b7ca52d73cce0f1d833f9f5b5ec89',    
-    qcloudAppId: '1256564161',
-    qcloudSecretId: '您的腾讯云 SecretId',
-    qcloudSecretKey: '您的腾讯云 SecretKey',
-    wxMessageToken: 'weixinmsgtoken',
+    // serverHost: 'localhost',
+    // tunnelServerUrl: '',
+    // tunnelSignatureKey: '27fb7d1c161b7ca52d73cce0f1d833f9f5b5ec89',    
+    // qcloudAppId: '1256564161',
+    // qcloudSecretId: '您的腾讯云 SecretId',
+    // qcloudSecretKey: '您的腾讯云 SecretKey',
+    // wxMessageToken: 'weixinmsgtoken',
     networkTimeout: 30000,
     
     /**
@@ -29,11 +29,11 @@ const CONF = {
         host: 'localhost',
         port: 3306,
         user: 'root',
-        //db: 'cAuth',
+        db: 'cAuth',
         minidb:'asemini',
-        db:'asemini',
-        //pass: 'wxdf90488513e663d2',
-        pass: 'root',
+        //db:'asemini',
+        pass: 'wxdf90488513e663d2',
+        //pass: 'root',
         char: 'utf8mb4'
     },
 

@@ -44,8 +44,8 @@ router.get('/', function (ctx) {
   ctx.state.data = 'this a sm index response!';
 });
 
-router.post('/add', smControllers.sm.add);
-router.post('/remove', smControllers.sm.remove);
+//router.post('/add', smControllers.sm.add);
+//router.post('/remove', smControllers.sm.remove);
 
 
 //module.exports = router;

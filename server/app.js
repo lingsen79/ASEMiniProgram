@@ -3,6 +3,7 @@ const app = new Koa()
 const debug = require('debug')('koa-weapp-demo')
 const response = require('./middlewares/response')
 const bodyParser = require('koa-bodyparser')
+var cors = require('koa-cors');
 //const session = require("koa-session")()
 const config = require('./config')
 global._ = require('lodash');
@@ -18,6 +19,8 @@ global.asemini_conn = require('knex')({
     database: 'asemini'
   }
 });
+
+app.use(cors());
 
 // 使用响应处理中间件
 app.use(response)

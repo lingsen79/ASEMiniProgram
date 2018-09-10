@@ -13,12 +13,11 @@ const { auth: { authorizationMiddleware, validationMiddleware } } = require('../
 const smIndexs = require('./api/sm/index');
 router.use('/api/sm', smIndexs.routes(), smIndexs.allowedMethods());
 
+const clientIndexs = require('./client/index');
+router.use('/client', clientIndexs.routes(), clientIndexs.allowedMethods());
+
  const indexs = require('./api/index');
  router.use('/api', indexs.routes(), indexs.allowedMethods());
-
-
-//const platformIndexs = require('./platform/index');
-//router.use('/platform', platformIndexs.routes(), platformIndexs.allowedMethods());
 
 // --- 登录与授权 Demo start--- //
 // 登录接口

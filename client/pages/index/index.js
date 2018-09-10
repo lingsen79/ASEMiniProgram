@@ -21,6 +21,7 @@ Page({
         // 调用登录接口
         qcloud.login({
             success(result) {
+              console.log(result)
                 if (result) {
                     util.showSuccess('登录成功')
                     that.setData({
@@ -28,6 +29,7 @@ Page({
                         logged: true
                     })
                 } else {
+                  console.log(config.service.requestUrl)
                     // 如果不是首次登录，不会返回用户信息，请求用户信息接口获取
                     qcloud.request({
                         url: config.service.requestUrl,

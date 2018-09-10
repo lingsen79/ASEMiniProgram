@@ -1,18 +1,8 @@
+const { uploader } = require('../../qcloud')
 const productDBModel = require('../../lib/db.product.class')
 const errorcode = require('../../lib/error.class');
 let productController = {};
 
-/*
-const Mock = require('mockjs');
-const errorcode = require('../models/error.class.js');
-const productDBModel = require('../models/db.product');
-const uti = require('../models/utils');
-const moment = require('moment');
-let productController = {};
-var multiparty = require('multiparty');
-var fs = require("fs");
-var request = require('request');
-*/
 
 /**
  * 通过查询，获取列表
@@ -29,9 +19,8 @@ productController.find = async (ctx)=> {
 	if(title != "") filters.push({"field":"`title`","value":title,"type":"likes"});
 	var sorts = new Array();
 	
-	productDBModel.find(offset,limit,filters,sorts,function(result){
-    ctx.response.body = result;
-	});
+	let result = await productDBModel.find(offset,limit,filters,sorts);
+  	return ctx.response.body = result;
 };
 
 
@@ -53,9 +42,8 @@ productController.add = async (ctx) => {
   	description:body.description,
   	remark:body.remark
   }
-  productDBModel.add(product,function(result){
-    ctx.response.body = {"code":result.code };
-  });
+  result = await productDBModel.add(product);
+  ctx.response.body = {"code":result.code};
 };
 
 /*
@@ -69,7 +57,8 @@ productController.set = async (ctx) => {
 	if(body.index && body.index > 0){
 		product["index"] = body.index;
 	}else{
-	  	res.json({"code":errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
   
 	if(body.title && body.title !=""){
@@ -105,13 +94,19 @@ productController.set = async (ctx) => {
 	if(body.regulations && body.regulations !=""){
 		product["regulations"] = body.regulations;
 	}
-	productDBModel.set(product,function(result){   
-    ctx.response.body = { "code": result.code };
-	});
+	
+	let result = await productDBModel.set(product);
+	ctx.response.body = {"code":result.code};
 };
 
 
 productController.upload = async (ctx) => {
+  // 获取上传之后的结果
+  // 具体可以查看：
+  const data = await uploader(ctx.req)
+  console.log(data)
+
+  ctx.state.data = data;
   /*
 	var form = new multiparty.Form({uploadDir: global.conf.uploadImageTargetDir});//'./server/uploadfile/'
 	form.parse(req, function(err, fields, files) {
@@ -135,9 +130,8 @@ productController.removeBatch = async (ctx) => {
     ctx.response.body = { "code": errorcode.PARAMS_FAILED };
     return;
 	}
-	productDBModel.remove(indexs,function(result){	
-    ctx.response.body = { "code": result.code };
-	});
+	let result = await productDBModel.removesm(indexs);
+	ctx.response.body = {"code":result.code};
 };
 
 /**
@@ -151,9 +145,8 @@ productController.remove = async (ctx) =>  {
     ctx.response.body = { "code": errorcode.PARAMS_FAILED };
     return;
 	}	
-	productDBModel.remove(index,function(result){		
-    ctx.response.body = { "code": result.code };
-	});
+	let result = await productDBModel.remove(index);
+	ctx.response.body = {"code":result.code};
 };
 
 
@@ -164,19 +157,18 @@ productController.remove = async (ctx) =>  {
  * @param res
  */
 productController.findBuyLimit = async (ctx) =>  {
-	let page = parseInt(req.query.page || 1); //页码（默认第1页）
-	let limit = parseInt(req.query.limit || 10); //每页显示条数（默认10条）
-	let title = req.query.title || '';
+	let query = ctx.query;
+	let page = parseInt(query.page || 1); //页码（默认第1页）
+	let limit = parseInt(query.limit || 10); //每页显示条数（默认10条）
+	let title = query.title || '';
 	let offset = (page-1) * limit;
 	let filters = new Array();
 	filters.push({"field":"logicdel","value":'0',"table":'b'});
 	if(title != "") filters.push({"field":"`title`","value":title,"type":"likes"});
 	var sorts = new Array();
 	
-	productDBModel.findBuyLimit(offset,limit,filters,sorts,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.findBuyLimit(offset,limit,filters,sorts);
+	return ctx.response.body = result;	  
 };
 
 /*
@@ -191,8 +183,8 @@ productController.addBuyLimit = async (ctx) =>  {
 	if(req.body.productindex && req.body.productindex > 0){
 		product["productindex"] = req.body.productindex;
 	}else{
-	  	res.json({"code":errorcode.PARAMS_FAILED});
-	  	return;
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
 	if(req.body.price && req.body.price !=""){
 		product["price"] = req.body.price;
@@ -206,15 +198,13 @@ productController.addBuyLimit = async (ctx) =>  {
 		product["begintime"] = moment(datetimerange[0]).format("YYYY-MM-DD HH:mm:ss");
 		product["endtime"] = moment(datetimerange[1]).format("YYYY-MM-DD HH:mm:ss");
 	}else{
-		res.json({"code":errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
 		return;
 	}
 	console.log(product);
-	res.json({"code":errorcode.SUCCESS })
-	productDBModel.addBuyLimit(product,function(result){
-	  	global.logger.info(result);
-	  	res.json({"code":result.code })
-	});
+	
+	let result = await productDBModel.addBuyLimit(product);
+	ctx.response.body = {"code":result.code};
 }
 
 productController.setBuyLimit = async (ctx) =>  {
@@ -224,8 +214,8 @@ productController.setBuyLimit = async (ctx) =>  {
 	if(req.body.index && req.body.index > 0){
 		product["index"] = req.body.index;
 	}else{
-	  	res.json({"code":errorcode.PARAMS_FAILED});
-	  	return;
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
 	if(req.body.price && req.body.price !=""){
 		product["price"] = req.body.price;
@@ -239,15 +229,12 @@ productController.setBuyLimit = async (ctx) =>  {
 		product["begintime"] = moment(datetimerange[0]).format("YYYY-MM-DD HH:mm:ss");
 		product["endtime"] = moment(datetimerange[1]).format("YYYY-MM-DD HH:mm:ss");
 	}else{
-		res.json({"code":errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
 		return;
 	}
-	console.log(product);
-	res.json({"code":errorcode.SUCCESS })
-	productDBModel.setBuyLimit(product,function(result){
-	  	global.logger.info(result);
-	  	res.json({"code":result.code })
-	});
+	console.log(product);	
+	let result = await productDBModel.setBuyLimit(product);
+	ctx.response.body = {"code":result.code};
 }
 
 /**
@@ -256,31 +243,26 @@ productController.setBuyLimit = async (ctx) =>  {
  * @param res
  */
 productController.removeBuyLimitBatch = async (ctx) =>  {
-	let indexs = req.params.indexs;
-	global.logger.info(req.body.indexs);
-	global.logger.info(req.params);
+	let indexs = ctx.params.indexs;
 	global.logger.info(indexs);
 	if (!indexs) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
-	productDBModel.removeBuyLimit(indexs,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.removeBuyLimit(indexs);
+	ctx.response.body = {"code":result.code};
 };
 
 productController.trashBuyLimitBatch = async (ctx) =>  {
-	let indexs = req.params.indexs;
-	global.logger.info(req.body.indexs);
-	global.logger.info(req.params);
+	let indexs = ctx.params.indexs;
 	global.logger.info(indexs);
 	if (!indexs) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
-	productDBModel.trashBuyLimit(indexs,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.trashBuyLimit(indexs);
+	ctx.response.body = {"code":result.code};
+	
 };
 
 
@@ -290,19 +272,18 @@ productController.trashBuyLimitBatch = async (ctx) =>  {
  * @param res
  */
 productController.findGroupPurchase = async (ctx) =>  {
-	let page = parseInt(req.query.page || 1); //页码（默认第1页）
-	let limit = parseInt(req.query.limit || 10); //每页显示条数（默认10条）
-	let title = req.query.title || '';
+	let query = ctx.query;
+	let page = parseInt(query.page || 1); //页码（默认第1页）
+	let limit = parseInt(query.limit || 10); //每页显示条数（默认10条）
+	let title = query.title || '';
 	let offset = (page-1) * limit;
 	let filters = new Array();
 	filters.push({"field":"logicdel","value":'0',"table":"g"});
 	if(title != "") filters.push({"field":"`title`","value":title,"type":"likes"});
 	var sorts = new Array();
 	
-	productDBModel.findGroupPurchase(offset,limit,filters,sorts,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.findGroupPurchase(offset,limit,filters,sorts);
+	ctx.response.body = result;
 };
 
 /*
@@ -318,8 +299,8 @@ productController.addGroupPurchase = async (ctx) =>  {
 	if(req.body.productindex && req.body.productindex > 0){
 		product["productindex"] = req.body.productindex;
 	}else{
-	  	res.json({"code":errorcode.PARAMS_FAILED});
-	  	return;
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
 	if(req.body.price && req.body.price !=""){
 		product["price"] = req.body.price;
@@ -336,14 +317,13 @@ productController.addGroupPurchase = async (ctx) =>  {
 		product["begintime"] = moment(datetimerange[0]).format("YYYY-MM-DD HH:mm:ss");
 		product["endtime"] = moment(datetimerange[1]).format("YYYY-MM-DD HH:mm:ss");
 	}else{
-		res.json({"code":errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
 		return;
 	}
 	console.log(product);
-	productDBModel.addGroupPurchase(product,function(result){
-	  	global.logger.info(result);
-	  	res.json({"code":result.code })
-	});
+	let result = await productDBModel.addGroupPurchase(product);
+	ctx.response.body = {"code":result.code};
+
 }
 
 productController.setGroupPurchase = async (ctx) =>  {
@@ -353,8 +333,8 @@ productController.setGroupPurchase = async (ctx) =>  {
 	if(req.body.index && req.body.index > 0){
 		product["index"] = req.body.index;
 	}else{
-	  	res.json({"code":errorcode.PARAMS_FAILED});
-	  	return;
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
 	if(req.body.price && req.body.price !=""){
 		product["price"] = req.body.price;
@@ -368,15 +348,12 @@ productController.setGroupPurchase = async (ctx) =>  {
 		product["begintime"] = moment(datetimerange[0]).format("YYYY-MM-DD HH:mm:ss");
 		product["endtime"] = moment(datetimerange[1]).format("YYYY-MM-DD HH:mm:ss");
 	}else{
-		res.json({"code":errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
 		return;
 	}
 	console.log(product);
-	res.json({"code":errorcode.SUCCESS })
-	productDBModel.setGroupPurchase(product,function(result){
-	  	global.logger.info(result);
-	  	res.json({"code":result.code })
-	});
+	let result = await productDBModel.setGroupPurchase(product);
+	ctx.response.body = {"code":result.code};
 }
 
 /**
@@ -390,12 +367,11 @@ productController.removeGroupPurchaseBatch = async (ctx) =>  {
 	global.logger.info(req.params);
 	global.logger.info(indexs);
 	if (!indexs) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
-	productDBModel.removeGroupPurchase(indexs,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.removeGroupPurchase(indexs);
+	ctx.response.body = {"code":result.code};
 };
 productController.trashGroupPurchaseBatch = async (ctx) =>  {
 	let indexs = req.params.indexs;
@@ -403,11 +379,10 @@ productController.trashGroupPurchaseBatch = async (ctx) =>  {
 	global.logger.info(req.params);
 	global.logger.info(indexs);
 	if (!indexs) {
-    	return res.json({"code": errorcode.PARAMS_FAILED});
+		ctx.response.body = {"code":errorcode.PARAMS_FAILED};
+		return;
 	}
-	productDBModel.trashGroupPurchase(indexs,function(result){
-		global.logger.info(result);
-		res.json(result);
-	});
+	let result = await productDBModel.trashGroupPurchase(indexs);
+	ctx.response.body = {"code":result.code};
 };
 module.exports = productController;
