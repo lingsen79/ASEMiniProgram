@@ -1,0 +1,2 @@
+/* client/pages/product/buy.wxss */
+.box_p_price{background: transparent;color:goldenrod;font-size: 16px}

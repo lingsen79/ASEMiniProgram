@@ -7,6 +7,7 @@ Page({
 
   data: {
     productList: {},
+    right_year: new Date().getFullYear()
   },
   onLoad: function(options) {
     // Do some initialize when page load.
@@ -33,6 +34,26 @@ Page({
       }
     }
     qcloud.request(options);
+  },
+  onbuy_click:function(e){
+    try{
+      wx.navigateTo({
+        url: '/pages/product/buy?pid=' + e.currentTarget.dataset.pid,
+        success:function(){
+
+        },
+        fail:function(){
+
+        },
+        complete:function(){
+          console.log(arguments)
+        }
+
+      });
+    }catch(ex){
+      console.log(ex);
+    }
+
   },
   end:true
 })

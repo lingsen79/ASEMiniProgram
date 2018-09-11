@@ -16,8 +16,9 @@
 .box_p image{margin:1px;width:100%;}
 .box_p_text{text-align: left;font-size: 12px;}
 .box_p_text_r{text-align: right;font-size: 12px;}
+.box_p_text_p1{color: red;}
 .box_p_title{text-align: left;font-weight: 400;font-size: 20px;border:0px solid red;width:100%;display: inline-block;}
 .box_p_summary{text-align: left;font-size: 16px;border:0px solid red;width:100%;display: inline-block;}
 .box_p_price{text-indent: 5px;text-align: left;font-size: 16px;border:0px solid red;width:100%;display: inline-block;background: black;height: 28px;color: white}
-.box_p_buy_btn{background-color: red;color: white;height: 28px;width:100%;display: inline-block;}
+.box_p_buy_btn{background-color:#45C01A;color: white;height: 28px;width:100%;display: inline-block;}
 .box_p_oprice{text-indent: 5px;text-align: left;font-size: 12px;width:100%;display: inline-block;text-decoration:line-through;color: aquamarine;}

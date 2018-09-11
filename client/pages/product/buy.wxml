@@ -1,0 +1,60 @@
+<!--client/pages/product/buy.wxml-->
+<view class="page">
+  <view class="page__bd page__bd_spacing">
+      <ul>
+        <li >
+          <view class="center" class="box_p">
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="placeholder"><image src='{{productinfo.imagepath}}'></image></div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item" >
+                <div class="box_p_title">{{productinfo.title}}</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_summary">{{productinfo.summary}}</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_price">¥{{productinfo.price}}</div>
+              </div>
+              <div class="weui-flex__item">
+                <div class="box_p_oprice">市场价:¥{{productinfo.price}}</div>
+              </div>
+              <div class="weui-flex__item">
+                <div class="box_p_text_r">已售<span class="box_p_text_p1">{{productinfo.sold}}</span>份</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+              <div class="weui-flex__item">
+                <div class="box_p_buy_btn" bindtap="onpay_click">在线支付</div>
+              </div>
+            </div>
+            <div class="weui-flex">
+            
+            <view class="weui-panel__bd">
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__title weui-media-box__title_in-text">商品详情</view>
+                    <view class="weui-media-box__desc">{{productinfo.description}}</view>
+                </view>
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__title weui-media-box__title_in-text">购买须知</view>
+                    <view class="weui-media-box__desc">{{productinfo.purchasenotes}}</view>
+                </view>
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__title weui-media-box__title_in-text">使用规则</view>
+                    <view class="weui-media-box__desc">{{productinfo.regulations}}</view>
+                </view>
+            </view>
+            </div>
+
+          </view>
+        </li>
+      </ul>
+  </view>
+</view>

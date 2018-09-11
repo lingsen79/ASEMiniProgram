@@ -13,9 +13,11 @@ productController.find = async (ctx) => {
   let page = parseInt(query.page || 1); //页码（默认第1页）
   let limit = parseInt(query.limit || 10); //每页显示条数（默认10条）
   let title = query.title || '';
+  let index = query.index || '';
   let offset = (page - 1) * limit;
   let filters = new Array();
   if (title != "") filters.push({ "field": "`title`", "value": title, "type": "likes" });
+  if (index != "") filters.push({ "field": "`index`", "value": index });
   var sorts = new Array();
 
   let result = await productDBModel.find(offset, limit, filters, sorts);

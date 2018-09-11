@@ -24,10 +24,10 @@
                 <div class="box_p_price">¥{{item.price}}</div>
               </div>
               <div class="weui-flex__item">
-                <div class="box_p_buy_btn">去购买</div>
+                <div class="box_p_buy_btn" data-pid="{{item.index}}" bindtap="onbuy_click">去购买</div>
               </div>
               <div class="weui-flex__item">
-                <div class="box_p_text_r">已售{{item.sold}}份</div>
+                <div class="box_p_text_r">已售<span class="box_p_text_p1">{{item.sold}}</span>份</div>
               </div>
             </div>
             <div class="weui-flex">
@@ -42,7 +42,7 @@
     </view>
     <view class="page__bd page__bd_spacing">
         <view class="weui-footer">
-            <view class="weui-footer__text">Copyright © 2008-2016 weui.io</view>
+            <view class="weui-footer__text">Copyright © 2006-{{right_year}} zy</view>
         </view>
     </view>
 </view>
