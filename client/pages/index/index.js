@@ -8,7 +8,8 @@ Page({
         userInfo: {},
         logged: false,
         takeSession: false,
-        requestResult: ''
+        requestResult: '',
+        right_year:new Date().getFullYear()
     },
 
     // 用户登录示例
